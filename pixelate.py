@@ -1,8 +1,8 @@
 import cv2
 import numpy as np
 
-ROWS = 30
-COLS = 24
+ROWS = 22
+COLS = 16
 
 ogimage = cv2.imread('image.jpg')
 height, width, channels = ogimage.shape
@@ -20,7 +20,7 @@ def uint8todeg(num):
     return num / 255 * 359
 
 def brown():
-    return 2, 2, 2
+    return 1, 1, 1
 
 
 def pastel(h):
@@ -81,7 +81,17 @@ for r in range(ROWS):
             avg[r][c][i] = min(avg[r][c][i], 255)  # make sure nothing is somehow over 255
             result[r][c][i] = avg[r][c][i]
 
+oldresult = result
 result = cv2.cvtColor(result, cv2.COLOR_BGR2HSV)
+
+out = open("out.txt", "w")
+for i in range(3):
+    for j in range(ROWS):
+        for k in range(COLS):
+            out.write(str(getRYB(result[j][k][0], result[j][k][1], result[j][k][2])[i]) + " ")
+        out.write('\n')
+    out.write('\n')
+
 
 out = open("out.txt", "w")
 for i in range(ROWS):
@@ -92,7 +102,7 @@ for i in range(ROWS):
 
 while 1:
     cv2.imshow("Original Image", ogimage)
-    cv2.imshow("Result", result)
+    cv2.imshow("Result", oldresult)
     if cv2.waitKey(10) & 0xFF == 27:
         break
 
